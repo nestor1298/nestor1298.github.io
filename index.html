@@ -1,14 +1,94 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Accessibility Audit Tool - Comprehensive Accessibility Checker</title>
-    <script type="module" crossorigin src="/assets/index-DIdGujdl.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BfQ-Q-OR.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Audit Tool</title>
+    <!-- Tailwind CSS for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- jsPDF for PDF export functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Link to your custom stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="p-4 sm:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <!-- Header Section -->
+        <header class="mb-8 text-center">
+            <div class="flex items-center justify-center gap-4 mb-2">
+                 <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <h1 class="text-4xl sm:text-5xl font-bold text-white">Accessibility Audit</h1>
+            </div>
+            <p class="text-lg text-gray-400">A comprehensive tool to improve digital and physical inclusion.</p>
+        </header>
+
+        <!-- Module Navigation -->
+        <nav class="mb-8">
+            <div id="module-selector" class="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-4">
+                <button data-module="web" class="module-btn w-full sm:w-auto text-left sm:text-center text-lg font-semibold py-3 px-6 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors duration-200 flex items-center gap-3">
+                    <i class="fas fa-globe w-6"></i> Web
+                </button>
+                <button data-module="app" class="module-btn w-full sm:w-auto text-left sm:text-center text-lg font-semibold py-3 px-6 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors duration-200 flex items-center gap-3">
+                    <i class="fas fa-mobile-alt w-6"></i> Mobile App
+                </button>
+                <button data-module="space" class="module-btn w-full sm:w-auto text-left sm:text-center text-lg font-semibold py-3 px-6 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors duration-200 flex items-center gap-3">
+                    <i class="fas fa-building w-6"></i> Physical Space
+                </button>
+                <button data-module="comms" class="module-btn w-full sm:w-auto text-left sm:text-center text-lg font-semibold py-3 px-6 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors duration-200 flex items-center gap-3">
+                    <i class="fas fa-comments w-6"></i> Communication
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Audit Content Area -->
+        <main id="audit-content" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <div id="welcome-message" class="text-center">
+                <h2 class="text-2xl font-semibold text-white mb-2">Welcome to the Audit Tool</h2>
+                <p class="text-gray-400">Please select a module above to begin your accessibility audit.</p>
+            </div>
+            <div id="checklist-container" class="hidden">
+                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                    <div>
+                        <h2 id="checklist-title" class="text-3xl font-bold text-white"></h2>
+                        <p id="checklist-description" class="text-gray-400 mt-1"></p>
+                    </div>
+                    <div class="flex items-center gap-4 mt-4 sm:mt-0">
+                        <button id="export-pdf" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 flex items-center gap-2"><i class="fas fa-file-pdf"></i> Export PDF</button>
+                        <button id="export-md" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 flex items-center gap-2"><i class="fab fa-markdown"></i> Export MD</button>
+                    </div>
+                </div>
+                <!-- Progress Bar -->
+                <div class="mb-6">
+                     <div class="flex justify-between items-center mb-1">
+                        <span class="text-sm font-medium text-gray-300">Progress</span>
+                        <span id="progress-text" class="text-sm font-medium text-gray-300">0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div id="progress-bar" class="progress-bar" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <!-- Checklist items will be dynamically inserted here -->
+                <div id="checklist-items"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for "Learn More" information -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 id="modal-title" class="text-2xl font-bold text-white mb-4"></h3>
+            <div id="modal-body" class="text-gray-300 space-y-4"></div>
+            <h4 class="text-lg font-semibold text-white mt-6 mb-2">External Resources:</h4>
+            <ul id="modal-links" class="list-disc list-inside text-blue-400 space-y-1">
+            </ul>
+        </div>
+    </div>
+
+    <!-- Link to your custom script file -->
+    <script src="script.js"></script>
+</body>
 </html>
